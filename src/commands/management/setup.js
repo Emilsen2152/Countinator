@@ -48,7 +48,7 @@ module.exports = {
                         button.data.disabled = true;
 
 
-                        message.edit({ components: [i.message.components[0]] }).catch(console.warn);
+                        i.message.edit({ components: [i.message.components[0]] }).catch(console.warn);
                     });
                 });
 
