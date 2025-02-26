@@ -29,7 +29,7 @@ new CommandKit({
     client,
     commandsPath: `${__dirname}/commands`,
     eventsPath: `${__dirname}/events`,
-    validationsPath: `${__dirname}/validations`,
+    /*validationsPath: `${__dirname}/validations`,*/
     devGuildIds: ['1051780690447962122'],
     devUserIds: ['935889950547771512'],
     //devRoleIds: ['DEV_ROLE_ID_1', 'DEV_ROLE_ID_2'],

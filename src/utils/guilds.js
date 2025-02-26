@@ -10,6 +10,16 @@ const guildSchema = new Schema({
         type: String,
         required: true
     },
+    incorrectNumber: {
+        type: String,
+        default: 'RESTART',
+        enum: ['IGNORE', 'DELETE', 'RESTART']
+    },
+    wasLastSender: {
+        type: String,
+        default: 'RESTART',
+        enum: ['ALLOW', 'IGNORE', 'DELETE', 'RESTART']
+    },
     notMath: {
         type: String,
         default: 'DELETE',
@@ -18,16 +28,6 @@ const guildSchema = new Schema({
     notWholeNumber: {
         type: String,
         default: 'DELETE',
-        enum: ['IGNORE', 'DELETE', 'RESTART']
-    },
-    wasLastSender: {
-        type: String,
-        default: 'RESTART',
-        enum: ['ALLOW', 'IGNORE', 'DELETE', 'RESTART']
-    },
-    incorrectNumber: {
-        type: String,
-        default: 'RESTART',
         enum: ['IGNORE', 'DELETE', 'RESTART']
     },
     nextNumber: {
