@@ -44,14 +44,12 @@ module.exports = {
 
                     // Disable other buttons
                     i.message.components[0].components.forEach(button => {
-                        if (button.customId !== i.customId) {
-                            button.data.disabled = true;
-                        }
+                       
+                        button.data.disabled = true;
+
 
                         message.edit({ components: [i.message.components[0]] }).catch(console.warn);
                     });
-
-                    i.message.edit({ components: [i.message.components[0]] }).catch(console.warn);
                 });
 
                 collector.on('end', (_, reason) => {
