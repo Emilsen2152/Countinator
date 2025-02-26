@@ -60,13 +60,11 @@ module.exports = {
             });
         }
 
-        const guildId = interaction.guild.id;
-
-        let guild = await guilds.findOne({ guildId }).exec();
+        let guild = await guilds.findOne({ guildId: interaction.guild.id }).exec();
 
         if (!guild) {
             guild = new guilds({
-                guildId,
+                guildId: interaction.guild.id,
                 countingChannel: interaction.channelId,
             });
         } else {
