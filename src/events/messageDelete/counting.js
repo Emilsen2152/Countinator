@@ -17,7 +17,7 @@ module.exports = async (message) => {
         return;
     };
 
-    const guild = await guilds.findById(message.guild.id).exec();
+    const guild = await guilds.findOne({ guildId: message.guild.id }).exec();
 
     if (!guild) {
         return;
