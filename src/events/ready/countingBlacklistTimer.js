@@ -17,5 +17,5 @@ module.exports = async (client) => {
                 });
             };
         };
-    });
+    }, 60000);
 };
