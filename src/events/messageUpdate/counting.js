@@ -30,7 +30,7 @@ module.exports = async (oldMessage, newMessage) => {
     newMessage.channel.send(`<@${newMessage.author.id}> Edited their message!\nThe count has been restarted.\n**The next number is 1.**`);
 
     guild.nextNumber = 1;
-    guild.lastNumberSenderId = '0';
+    guild.lastSender = '0';
 
     await guild.save();
 };
