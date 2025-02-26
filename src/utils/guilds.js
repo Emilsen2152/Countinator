@@ -37,15 +37,7 @@ const guildSchema = new Schema({
     lastSender: {
         type: String,
         default: '0'
-    },
-    adminRoles: {
-        type: [String],
-        default: []
-    },
-    modRoles: {
-        type: [String],
-        default: []
-    },
+    }
 });
 
 module.exports = mongoose.model('guilds', guildSchema);
