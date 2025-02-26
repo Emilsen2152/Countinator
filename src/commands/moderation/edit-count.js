@@ -14,19 +14,29 @@ module.exports = {
             .setRequired(true)),
         
     run: async ({ interaction, client }) => {
+        await interaction.deferReply({
+            ephemeral: true
+        }).catch(console.warn);
         const guildId = interaction.guild.id;
         const guild = await guilds.findOne({
             guildId
         }).exec();
 
         if (!guild) {
-            return interaction.reply({
+            return interaction.editReply({
                 content: 'This server has not been set up yet. Please run the `/setup` command first.',
                 ephemeral: true
             });
         }
 
         const nextCount = interaction.options.getInteger('new-count');
+
+        if (nextCount < 1) {
+            return interaction.editReply({
+                content: 'The next number must be at least 1.',
+                ephemeral: true
+            });
+        };
 
         guild.nextNumber = nextCount;
         guild.lastSender = '0';
@@ -36,7 +46,7 @@ module.exports = {
         const countingChannel = client.channels.cache.get(guild.countingChannel);
 
         if (!countingChannel) {
-            return interaction.reply({
+            return interaction.editReply({
                 content: 'Counting channel not found. Please run the `/setup` command again.',
                 ephemeral: true
             });
@@ -46,7 +56,7 @@ module.exports = {
             content: `The next number has been edited to: ${nextCount.toString()}`
         }).catch(console.warn);
 
-        interaction.reply({
+        interaction.editReply({
             content: 'Updated!',
             ephemeral: true
         });
@@ -56,7 +66,7 @@ module.exports = {
     options: {
         devOnly: false,
         userPermissions: [],
-        botPermissions: ['Administrator'],
+        botPermissions: [PermissionFlagsBits.AddReactions, PermissionFlagsBits.ManageMessages, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ViewChannel],
         deleted: false,
     },
 };  
