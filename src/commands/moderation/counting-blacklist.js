@@ -63,7 +63,7 @@ module.exports = {
 
             await newBlacklist.save();
 
-            interaction.reply({
+            interaction.editReply({
                 content: `User <@${user.id}> has been blacklisted for reason: ${reason}.`,
                 ephemeral: true
             });
@@ -92,14 +92,14 @@ module.exports = {
             const blacklisted = await countingBlacklist.findOneAndDelete({ guildId: guildId, discordId: user.id }).exec();
 
             if (!blacklisted) {
-                interaction.reply({
+                interaction.editReply({
                     content: `User <@${user.id}> is not blacklisted.`,
                     ephemeral: true
                 });
                 return;
             };
 
-            interaction.reply({
+            interaction.editReply({
                 content: `User <@${user.id}> has been removed from the blacklist.`,
                 ephemeral: true
             });
