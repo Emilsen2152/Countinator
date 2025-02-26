@@ -34,6 +34,10 @@ module.exports = {
         };
 
         if (subcommand === 'add') {
+            await interaction.deferReply({
+                ephemeral: true
+            });
+            
             const user = interaction.options.getUser('user');
             const reason = interaction.options.getString('reason');
             const hours = interaction.options.getInteger('hours');
@@ -70,8 +74,7 @@ module.exports = {
                 .addFields(
                     { name: 'Reason', value: reason },
                     { name: 'Expiration', value: permanent ? 'Permanent' : `<t:${Math.floor(expiration.getTime() / 1000)}:F>` }
-                )
-                .setColor('RED');
+                );
 
             user.send({ embeds: [embed] }).catch(e => {
                 console.warn(e);
@@ -81,6 +84,9 @@ module.exports = {
                 });
             });
         } else if (subcommand === 'remove') {
+            await interaction.deferReply({
+                ephemeral: true
+            });
             const user = interaction.options.getUser('user');
 
             const blacklisted = await countingBlacklist.findOneAndDelete({ guildId: guildId, discordId: user.id }).exec();
