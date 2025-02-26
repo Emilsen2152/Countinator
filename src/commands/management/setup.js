@@ -1,6 +1,26 @@
 const guilds = require('../../utils/guilds');
 const { SlashCommandBuilder, PermissionFlagsBits, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
 
+const acceptButton = new ButtonBuilder()
+    .setCustomId('ALLOW')
+    .setLabel('Allow')
+    .setStyle(ButtonStyle.Success);
+
+const ignoreButton = new ButtonBuilder()
+    .setCustomId('IGNORE')
+    .setLabel('Ignore Message')
+    .setStyle(ButtonStyle.Secondary);
+
+const deleteButton = new ButtonBuilder()
+    .setCustomId('DELETE')
+    .setLabel('Delete Message')
+    .setStyle(ButtonStyle.Primary);
+
+const restartButton = new ButtonBuilder()
+    .setCustomId('RESTART')
+    .setLabel('Restart Counting')
+    .setStyle(ButtonStyle.Danger);
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('setup')
@@ -9,6 +29,8 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
 
     run: async ({ interaction, client }) => {
+        await interaction.deferReply().catch(console.warn);
+
         function collectResponse() {
             return new Promise((resolve, reject) => {
                 const collector = interaction.channel.createMessageComponentCollector({
@@ -51,30 +73,8 @@ module.exports = {
             guild.countingChannel = interaction.channelId;
         };
 
-        await guild.save();
-
-        const acceptButton = new ButtonBuilder()
-            .setCustomId('ACCEPT')
-            .setLabel('Accept')
-            .setStyle(ButtonStyle.Success);
-
-        const ignoreButton = new ButtonBuilder()
-            .setCustomId('IGNORE')
-            .setLabel('Ignore Message')
-            .setStyle(ButtonStyle.Secondary);
-        
-        const deleteButton = new ButtonBuilder()
-            .setCustomId('DELETE')
-            .setLabel('Delete Message')
-            .setStyle(ButtonStyle.Primary);
-        
-        const restartButton = new ButtonBuilder()
-            .setCustomId('RESTART')
-            .setLabel('Restart Counting')
-            .setStyle(ButtonStyle.Danger);
-
         try {
-            interaction.reply('Setup started.').catch(console.warn);
+            interaction.editReply('Setup started.').catch(console.warn);
 
             const incorrectNumberRow = new ActionRowBuilder()
                 .addComponents(ignoreButton, deleteButton, restartButton);  
