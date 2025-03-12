@@ -24,8 +24,8 @@ async function handleError(message, guild, errorMsg, configKey, restart = true) 
             ? `\nThe count has been restarted.\n**The next number is 1.**`
             : '';
         await message.channel.send(`<@${message.author.id}> ${errorMsg}${restartText}`).catch(console.warn);
-        guild.lastSender = '0';
-        guild.nextNumber = 1;
+        guild.lastCompetetiveSender = '0';
+        guild.nextCompetetiveNumber = 1;
         await guild.save();
     }
 }
@@ -85,24 +85,24 @@ module.exports = async (message) => {
         await message.channel.send(
                 
         ).catch(console.warn);
-        guild.lastSender = '0';
-        guild.nextNumber = 1;
+        guild.lastCompetetiveSender = '0';
+        guild.nextCompetetiveNumber = 1;
         await guild.save();
         return;
     };
     
     if (numberInText === guild.nextCompetetiveNumber) {
         // Here we must update before reacting.
-        guild.nextNumber++;
-        guild.lastSender = message.author.id;
+        guild.nextCompetetiveNumber++;
+        guild.lastCompetetiveSender = message.author.id;
         await guild.save();
         message.react('✅').catch(e => console.warn(e));
     } else {
         await message.channel.send(
             `<@${message.author.id}>, ${numberInText} was the incorrect number!\nThe correct number was **${guild.nextCompetetiveNumber}**.\nThe count has been restarted.\n**The next number is 1.**`
         ).catch(console.warn);
-        guild.lastSender = '0';
-        guild.nextNumber = 1;
+        guild.lastCompetetiveSender = '0';
+        guild.nextCompetetiveNumber = 1;
         await guild.save();
     };
 };
