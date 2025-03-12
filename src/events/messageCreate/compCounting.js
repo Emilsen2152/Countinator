@@ -2,34 +2,6 @@ const guilds = require('../../utils/guilds');
 const countingBlacklist = require('../../utils/countingBlacklist');
 const { evaluate } = require('mathjs');
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-const compSetup = {
-    incorrectNumber: 'RESTART',
-    wasLastSender: 'RESTART',
-    notMath: 'DELETE',
-    notWholeNumber: 'DELETE'
-};
-
-async function handleError(message, guild, errorMsg, configKey, restart = true) {
-    const mode = compSetup[configKey];
-    if (mode === 'IGNORE') return;
-    if (mode === 'DELETE') {
-        const botReply = await message.channel.send(`<@${message.author.id}> ${errorMsg}`);
-        await message.delete().catch(e => console.warn(e));
-        await sleep(3000);
-        await botReply.delete().catch(e => console.warn(e));
-    } else if (mode === 'RESTART') {
-        const restartText = restart
-            ? `\nThe count has been restarted.\n**The next number is 1.**`
-            : '';
-        await message.channel.send(`<@${message.author.id}> ${errorMsg}${restartText}`).catch(console.warn);
-        guild.lastCompetetiveSender = '0';
-        guild.nextCompetetiveNumber = 1;
-        await guild.save();
-    }
-}
-
 module.exports = async (message) => {
     if (message.author.bot || !message.guild) return;
 
@@ -54,7 +26,9 @@ module.exports = async (message) => {
     const text = message.content.trim();
     
     if (text.toLowerCase().includes('0x')) {
-        await handleError(message, guild, 'only numbers and math expressions are allowed here!', 'notMath', true);
+        const botReply = await message.channel.send(`<@${message.author.id}> only numbers and math expressions are allowed here!`);
+        await message.delete().catch(e => console.warn(e));
+        botReply.delete().catch(e => console.warn(e));
         return;
     }
     
@@ -62,29 +36,35 @@ module.exports = async (message) => {
     try {
         numberInText = evaluate(text);
     } catch (error) {
-        await handleError(message, guild, 'invalid mathematical expression!', 'notMath', true);
+        const botReply = await message.channel.send(`<@${message.author.id}> invalid mathematical expression!`);
+        await message.delete().catch(e => console.warn(e));
+        botReply.delete().catch(e => console.warn(e));
         return;
-    }
+    };
     
     if (isNaN(numberInText) || !isFinite(numberInText)) {
-        await handleError(message, guild, 'only valid numbers and expressions are allowed!', 'notMath', true);
+        const botReply = await message.channel.send(`<@${message.author.id}> only valid numbers and expressions are allowed!`);
+        await message.delete().catch(e => console.warn(e));
+        botReply.delete().catch(e => console.warn(e));
         return;
-    }
+    };
     
     if (numberInText < 0) {
-        await handleError(message, guild, 'only whole numbers above 0 are allowed!', 'notMath', true);
+        const botReply = await message.channel.send(`<@${message.author.id}> only whole numbers above 0 are allowed!`);
+        await message.delete().catch(e => console.warn(e));
+        botReply.delete().catch(e => console.warn(e));
         return;
-    }
+    };
     
     if (!Number.isInteger(numberInText)) {
-        await handleError(message, guild, 'only whole numbers are allowed!', 'notWholeNumber', true);
+        const botReply = await message.channel.send(`<@${message.author.id}> only whole numbers are allowed!`);
+        await message.delete().catch(e => console.warn(e));
+        botReply.delete().catch(e => console.warn(e));
         return;
-    }
+    };
     
     if (message.author.id === guild.lastCompetetiveSender) {
-        await message.channel.send(
-                
-        ).catch(console.warn);
+        await message.channel.send(`<@${message.author.id}> tried to count twice!\nThe count has been restarted.\n**The next number is 1.**`).catch(console.warn);
         guild.lastCompetetiveSender = '0';
         guild.nextCompetetiveNumber = 1;
         await guild.save();
