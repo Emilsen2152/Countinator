@@ -72,7 +72,6 @@ module.exports = async (message) => {
     };
     
     if (numberInText === guild.nextCompetetiveNumber) {
-        // Here we must update before reacting.
         guild.nextCompetetiveNumber++;
         guild.lastCompetetiveSender = message.author.id;
         await guild.save();
