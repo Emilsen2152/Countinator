@@ -37,5 +37,5 @@ new CommandKit({
     bulkRegister: true,
 });
 
-//client.login(process.env.TOKEN);
-client.login(process.env.BETA_TOKEN);
+client.login(process.env.TOKEN);
+//client.login(process.env.BETA_TOKEN);
