@@ -10,7 +10,7 @@ module.exports = (client) => {
             .setTitle('Introducing competitive counting!')
             .setDescription('Competitive counting is a new way to count in your server. It is a fun and competitive way to count to infinity. The rules are simple: you must count in order, and you must wait for someone else to count before you can count again. If you make a mistake, the count will be reset to 1.')
             .addFields(
-                { name: 'How to start', value: 'To start competitive counting, type `/setup competetive` in your server.' },
+                { name: 'How to start', value: 'To start competitive counting, type `/setup competitive` in your server.' },
                 { name: 'Leaderboard', value: 'To view the leaderboard, type `/leaderboard` in your server.' },
                 { name: 'Questions', value: 'If you have any questions, please contact the bot owner.' },
             )

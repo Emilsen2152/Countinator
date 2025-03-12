@@ -38,15 +38,15 @@ const guildSchema = new Schema({
         type: String,
         default: '0'
     },
-    competetiveChannel: {
+    competitiveChannel: {
         type: String, 
         default: '0'
     },
-    nextCompetetiveNumber: {
+    nextCompetitiveNumber: {
         type: Number,
         default: 1
     },
-    lastCompetetiveSender: {
+    lastCompetitiveSender: {
         type: String,
         default: '0'
     },

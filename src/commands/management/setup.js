@@ -33,8 +33,8 @@ module.exports = {
                 .setDescription('Setup the counting channel for your server. Use this command in the counting channel.'))
         .addSubcommand(subcommand =>
             subcommand
-                .setName('competetive')
-                .setDescription('Setup the competetive counting channel for your server. Use this command in the competetive channel.')),
+                .setName('competitive')
+                .setDescription('Setup the competitive counting channel for your server. Use this command in the competitive channel.')),
 
     run: async ({ interaction, client }) => {
         await interaction.deferReply().catch(console.warn);
@@ -82,8 +82,8 @@ module.exports = {
                 guild.countingChannel = interaction.channelId;
             };
 
-            if (guild.competetiveChannel === interaction.channelId) {
-                return interaction.editReply('This channel is already set up as a competetive counting channel.').catch(console.warn);
+            if (guild.competitiveChannel === interaction.channelId) {
+                return interaction.editReply('This channel is already set up as a competitive counting channel.').catch(console.warn);
             };
 
             try {
@@ -158,7 +158,7 @@ module.exports = {
                     await interaction.followUp('An error occurred. Please try again.').catch(console.warn);
                 }
             }
-        } else if (subcommand === 'competetive') {
+        } else if (subcommand === 'competitive') {
             interaction.editReply('Setup started.').catch(console.warn);
             if (!guild) {
                 guild = new guilds({
@@ -184,7 +184,7 @@ module.exports = {
                 .addComponents(acceptTermsButton, declineTermsButton);
 
             await interaction.channel.send({
-                content: 'By setting up the competetive counting channel you agree that the bot can show your server name in the global leaderboard.',
+                content: 'By setting up the competitive counting channel you agree that the bot can show your server name in the global leaderboard.',
                 components: [termsRow],
                 withResponse: true
             });
@@ -192,27 +192,27 @@ module.exports = {
             const termsResponse = await collectResponse();
 
             if (termsResponse.customId === 'DeclineTerms') {
-                if (guild.competetiveChannel !== '0') {
-                    guild.competetiveChannel = '0';
-                    guild.nextCompetetiveNumber = 1;
-                    guild.lastCompetetiveSender = '0';
+                if (guild.competitiveChannel !== '0') {
+                    guild.competitiveChannel = '0';
+                    guild.nextCompetitiveNumber = 1;
+                    guild.lastCompetitiveSender = '0';
 
                     await guild.save();
 
-                    return termsResponse.reply('Your server has been removed from the competetive leaderboard and the setup has been cancelled.').catch(console.warn);
+                    return termsResponse.reply('Your server has been removed from the competitive leaderboard and the setup has been cancelled.').catch(console.warn);
                 } else {
                     return termsResponse.reply('Setup cancelled.').catch(console.warn);
                 };
             };
 
-            guild.competetiveChannel = interaction.channelId;
+            guild.competitiveChannel = interaction.channelId;
 
             await guild.save();
 
             termsResponse.reply('Setup completed.').catch(console.warn);
 
             const infoMessage = await interaction.channel.send({
-                content: '**Welcome to the competetive counting channel!**\n\nThe rules are simple:\n- You must count up from 1.\n- You must wait for someone else to count before you can count again.\n- If you make a mistake, the count will be restarted.\n- If you edit or delete your message the count will be restarted.\n\nGood luck!\n\nThe next number is ' + guild.nextCompetetiveNumber + '.',
+                content: '**Welcome to the competitive counting channel!**\n\nThe rules are simple:\n- You must count up from 1.\n- You must wait for someone else to count before you can count again.\n- If you make a mistake, the count will be restarted.\n- If you edit or delete your message the count will be restarted.\n\nGood luck!\n\nThe next number is ' + guild.nextCompetitiveNumber + '.',
             }).catch(console.warn);
 
             infoMessage.pin().catch(console.warn);

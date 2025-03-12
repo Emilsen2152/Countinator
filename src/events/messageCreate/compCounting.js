@@ -13,7 +13,7 @@ module.exports = async (message) => {
         countingBlacklist.findOne({ guildId: message.guild.id, discordId: message.author.id }).exec()
     ]);
     
-    if (!guild || message.channel.id !== guild.competetiveChannel) return;
+    if (!guild || message.channel.id !== guild.competitiveChannel) return;
     
     if (blacklisted) {
         await message.delete().catch(e => console.warn(e));
@@ -70,25 +70,25 @@ module.exports = async (message) => {
         return;
     };
     
-    if (message.author.id === guild.lastCompetetiveSender) {
+    if (message.author.id === guild.lastCompetitiveSender) {
         await message.channel.send(`<@${message.author.id}> tried to count twice!\nThe count has been restarted.\n**The next number is 1.**`).catch(console.warn);
-        guild.lastCompetetiveSender = '0';
-        guild.nextCompetetiveNumber = 1;
+        guild.lastCompetitiveSender = '0';
+        guild.nextCompetitiveNumber = 1;
         await guild.save();
         return;
     };
     
-    if (numberInText === guild.nextCompetetiveNumber) {
-        guild.nextCompetetiveNumber++;
-        guild.lastCompetetiveSender = message.author.id;
+    if (numberInText === guild.nextCompetitiveNumber) {
+        guild.nextCompetitiveNumber++;
+        guild.lastCompetitiveSender = message.author.id;
         await guild.save();
         message.react('✅').catch(e => console.warn(e));
     } else {
         await message.channel.send(
-            `<@${message.author.id}>, ${numberInText} was the incorrect number!\nThe correct number was **${guild.nextCompetetiveNumber}**.\nThe count has been restarted.\n**The next number is 1.**`
+            `<@${message.author.id}>, ${numberInText} was the incorrect number!\nThe correct number was **${guild.nextCompetitiveNumber}**.\nThe count has been restarted.\n**The next number is 1.**`
         ).catch(console.warn);
-        guild.lastCompetetiveSender = '0';
-        guild.nextCompetetiveNumber = 1;
+        guild.lastCompetitiveSender = '0';
+        guild.nextCompetitiveNumber = 1;
         await guild.save();
     };
 };

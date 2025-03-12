@@ -10,8 +10,8 @@ module.exports = {
         await interaction.deferReply();
 
         const bestGuilds = await guilds.find({ 
-            competetiveChannel: { $ne: '0', $exists: true } // Combined conditions
-        }).sort({ nextCompetetiveNumber: -1 }).limit(50).exec();
+            competitiveChannel: { $ne: '0', $exists: true } // Combined conditions
+        }).sort({ nextCompetitiveNumber: -1 }).limit(50).exec();
 
         if (!bestGuilds.length) {
             return interaction.editReply({ content: 'No competitive servers found.', ephemeral: true });
@@ -20,7 +20,7 @@ module.exports = {
         const leaderboard = await Promise.all(bestGuilds.map(async (guild, index) => {
             const fetchedGuild = await client.guilds.fetch(guild.guildId).catch(() => null);
             const guildName = fetchedGuild ? fetchedGuild.name : 'Unknown Server';
-            return `**${index + 1}.** ${guildName} - ${guild.nextCompetetiveNumber -1 }`;
+            return `**${index + 1}.** ${guildName} - ${guild.nextCompetitiveNumber -1 }`;
         }));
 
         // Split into multiple embeds if the text is too long

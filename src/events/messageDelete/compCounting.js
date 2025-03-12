@@ -21,13 +21,13 @@ module.exports = async (oldMessage) => {
     }
 
     const guild = await guilds.findOne({ guildId: oldMessage.guild.id }).exec();
-    if (!guild || oldMessage.channel.id !== guild.competetiveChannel) {
+    if (!guild || oldMessage.channel.id !== guild.competitiveChannel) {
         return;
     }
 
     oldMessage.channel.send(`<@${oldMessage.author.id}> deleted their message!\nThe count has been restarted.\n**The next number is 1.**`);
 
-    guild.nextCompetetiveNumber = 1;
-    guild.lastCompetetiveSender = '0';
+    guild.nextCompetitiveNumber = 1;
+    guild.lastCompetitiveSender = '0';
     await guild.save();
 };
