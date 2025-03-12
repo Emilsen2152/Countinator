@@ -204,7 +204,7 @@ module.exports = {
             termsResponse.reply('Setup completed.').catch(console.warn);
 
             const infoMessage = await interaction.channel.send({
-                content: '**Welcome to the competetive counting channel!**\n\nThe rules are simple:\n- You must count up from 1.\n- You must wait for someone else to count before you can count again.\n- If you make a mistake, the count will be restarted.\nIf you edit or delete your message the count will be restarted.\n\nGood luck!\n\nThe next number is ' + guild.nextCompetetiveNumber + '.',
+                content: '**Welcome to the competetive counting channel!**\n\nThe rules are simple:\n- You must count up from 1.\n- You must wait for someone else to count before you can count again.\n- If you make a mistake, the count will be restarted.\n- If you edit or delete your message the count will be restarted.\n\nGood luck!\n\nThe next number is ' + guild.nextCompetetiveNumber + '.',
             }).catch(console.warn);
 
             infoMessage.pin().catch(console.warn);
