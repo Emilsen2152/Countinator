@@ -193,7 +193,6 @@ module.exports = {
 
                     return termsResponse.reply('Your server has been removed from the competetive leaderboard and the setup has been cancelled.').catch(console.warn);
                 } else {
-                    
                     return termsResponse.reply('Setup cancelled.').catch(console.warn);
                 };
             };
