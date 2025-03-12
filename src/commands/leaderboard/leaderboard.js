@@ -31,7 +31,7 @@ module.exports = {
         leaderboard.forEach((entry) => {
             if ((currentChunk + entry).length > chunkSize) {
                 embeds.push(new EmbedBuilder()
-                    .setTitle('🏆 Competitive Server Leaderboard')
+                    .setTitle('🏆 Server leaderboard')
                     .setDescription(currentChunk)
                     .setColor('#FFD700')
                 );
