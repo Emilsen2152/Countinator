@@ -195,7 +195,11 @@ module.exports = {
             await guild.save();
 
             lastMessage.reply('Setup completed.').catch(console.warn);
-        }
+
+            interaction.channel.send({
+                content: '**Welcome to the competetive counting channel!**\n\nThe rules are simple:\n- You must count up from 1.\n- You must wait for someone else to count before you can count again.\n- If you make a mistake, the count will be restarted.\n\nGood luck!',
+            }).catch(console.warn);
+        };
     },
 
     options: {
