@@ -82,6 +82,10 @@ module.exports = {
                 guild.countingChannel = interaction.channelId;
             };
 
+            if (guild.competetiveChannel === interaction.channelId) {
+                return interaction.editReply('This channel is already set up as a competetive counting channel.').catch(console.warn);
+            };
+
             try {
                 interaction.editReply('Setup started.').catch(console.warn);
 
@@ -160,6 +164,10 @@ module.exports = {
                 guild = new guilds({
                     guildId: interaction.guild.id,
                 });
+            };
+
+            if (guild.countingChannel === interaction.channelId) {
+                return interaction.editReply('This channel is already set up as a counting channel.').catch(console.warn);
             };
 
             const acceptTermsButton = new ButtonBuilder()
