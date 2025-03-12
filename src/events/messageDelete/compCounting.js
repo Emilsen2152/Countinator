@@ -10,7 +10,7 @@ module.exports = async (oldMessage) => {
     const auditLogs = await oldMessage.guild.fetchAuditLogs({ type: 72, limit: 1 });
     const entry = auditLogs.entries.first();
 
-    if (entry.target.id !== oldMessage.author.id) {
+    if (entry.target.id === oldMessage.author.id) {
         return;
     }
 
