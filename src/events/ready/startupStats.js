@@ -4,7 +4,7 @@ module.exports = (client) => {
     client.guilds.cache.forEach(async guild => {
         console.log(`${guild.name} | ${guild.id}`);
 
-        // Send information to the owner
+        /* Send information to the owner
         const owner = await guild.fetchOwner().catch(console.warn);
         const embed = new EmbedBuilder()
             .setTitle('Introducing competitive counting!')
@@ -15,6 +15,6 @@ module.exports = (client) => {
                 { name: 'Questions', value: 'If you have any questions, please contact the bot owner.' },
             )
             .setColor('#FF0000');
-        owner.send({ embeds: [embed] }).catch(console.warn);
+        owner.send({ embeds: [embed] }).catch(console.warn);*/
     });
 };
