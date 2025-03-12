@@ -20,7 +20,7 @@ module.exports = {
         const leaderboard = await Promise.all(bestGuilds.map(async (guild, index) => {
             const fetchedGuild = await client.guilds.fetch(guild.guildId).catch(() => null);
             const guildName = fetchedGuild ? fetchedGuild.name : 'Unknown Server';
-            return `**${index + 1}.** ${guildName} - ${guild.nextCompetetiveNumber}`;
+            return `**${index + 1}.** ${guildName} - ${guild.nextCompetetiveNumber -1 }`;
         }));
 
         // Split into multiple embeds if the text is too long
