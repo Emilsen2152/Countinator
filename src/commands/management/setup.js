@@ -222,7 +222,7 @@ module.exports = {
     options: {
         devOnly: false,
         userPermissions: [],
-        botPermissions: [PermissionFlagsBits.AddReactions, PermissionFlagsBits.ManageMessages, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ViewAuditLog],
+        botPermissions: ['AddReactions', 'ManageMessages', 'SendMessages', 'ViewChannel', 'ViewAuditLog'],
         deleted: false,
     },
 };

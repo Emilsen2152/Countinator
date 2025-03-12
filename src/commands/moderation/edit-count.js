@@ -66,7 +66,7 @@ module.exports = {
     options: {
         devOnly: false,
         userPermissions: [],
-        botPermissions: [PermissionFlagsBits.SendMessages, PermissionFlagsBits.ViewChannel],
+        botPermissions: ['SendMessages', 'ViewChannel'],
         deleted: false,
     },
 };  
