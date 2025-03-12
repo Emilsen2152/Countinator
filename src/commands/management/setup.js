@@ -34,7 +34,7 @@ module.exports = {
         .addSubcommand(subcommand =>
             subcommand
                 .setName('competetive')
-                .setDescription('Setup the competetive counting channel for your server. Use this command in the competetive counting channel.')),
+                .setDescription('Setup the competetive counting channel for your server. Use this command in the competetive channel.')),
 
     run: async ({ interaction, client }) => {
         await interaction.deferReply().catch(console.warn);
@@ -155,13 +155,11 @@ module.exports = {
                 }
             }
         } else if (subcommand === 'competetive') {
+            interaction.editReply('Setup started.').catch(console.warn);
             if (!guild) {
                 guild = new guilds({
                     guildId: interaction.guild.id,
-                    competetiveChannel: interaction.channelId,
                 });
-            } else {
-                guild.competetiveChannel = interaction.channelId;
             };
 
             const acceptTermsButton = new ButtonBuilder()
@@ -177,7 +175,7 @@ module.exports = {
             const termsRow = new ActionRowBuilder()
                 .addComponents(acceptTermsButton, declineTermsButton);
 
-            let lastMessage = await interaction.channel.send({
+            await interaction.channel.send({
                 content: 'By setting up the competetive counting channel you agree that the bot can show your server name in the global leaderboard.',
                 components: [termsRow],
                 withResponse: true
@@ -186,19 +184,31 @@ module.exports = {
             const termsResponse = await collectResponse();
 
             if (termsResponse.customId === 'DeclineTerms') {
-                return termsResponse.reply('Setup cancelled.').catch(console.warn);
+                if (guild.competetiveChannel !== '0') {
+                    guild.competetiveChannel = '0';
+                    guild.nextCompetetiveNumber = 1;
+                    guild.lastCompetetiveSender = '0';
+
+                    await guild.save();
+
+                    return termsResponse.reply('Your server has been removed from the competetive leaderboard and the setup has been cancelled.').catch(console.warn);
+                } else {
+                    
+                    return termsResponse.reply('Setup cancelled.').catch(console.warn);
+                };
             };
 
-            guild.nextCompetetiveNumber = 1;
-            guild.lastCompetetiveSender = '0';
+            guild.competetiveChannel = interaction.channelId;
 
             await guild.save();
 
-            lastMessage.reply('Setup completed.').catch(console.warn);
+            termsResponse.reply('Setup completed.').catch(console.warn);
 
-            interaction.channel.send({
-                content: '**Welcome to the competetive counting channel!**\n\nThe rules are simple:\n- You must count up from 1.\n- You must wait for someone else to count before you can count again.\n- If you make a mistake, the count will be restarted.\n\nGood luck!',
+            const infoMessage = await interaction.channel.send({
+                content: '**Welcome to the competetive counting channel!**\n\nThe rules are simple:\n- You must count up from 1.\n- You must wait for someone else to count before you can count again.\n- If you make a mistake, the count will be restarted.\n\nGood luck!\n\nThe next number is ' + guild.nextCompetetiveNumber + '.',
             }).catch(console.warn);
+
+            infoMessage.pin().catch(console.warn);
         };
     },
 

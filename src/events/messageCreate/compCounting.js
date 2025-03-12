@@ -2,6 +2,8 @@ const guilds = require('../../utils/guilds');
 const countingBlacklist = require('../../utils/countingBlacklist');
 const { evaluate } = require('mathjs');
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 module.exports = async (message) => {
     if (message.author.bot || !message.guild) return;
 
@@ -28,6 +30,7 @@ module.exports = async (message) => {
     if (text.toLowerCase().includes('0x')) {
         const botReply = await message.channel.send(`<@${message.author.id}> only numbers and math expressions are allowed here!`);
         await message.delete().catch(e => console.warn(e));
+        await sleep(3000);
         botReply.delete().catch(e => console.warn(e));
         return;
     }
@@ -38,6 +41,7 @@ module.exports = async (message) => {
     } catch (error) {
         const botReply = await message.channel.send(`<@${message.author.id}> invalid mathematical expression!`);
         await message.delete().catch(e => console.warn(e));
+        await sleep(3000);
         botReply.delete().catch(e => console.warn(e));
         return;
     };
@@ -45,6 +49,7 @@ module.exports = async (message) => {
     if (isNaN(numberInText) || !isFinite(numberInText)) {
         const botReply = await message.channel.send(`<@${message.author.id}> only valid numbers and expressions are allowed!`);
         await message.delete().catch(e => console.warn(e));
+        await sleep(3000);
         botReply.delete().catch(e => console.warn(e));
         return;
     };
@@ -52,6 +57,7 @@ module.exports = async (message) => {
     if (numberInText < 0) {
         const botReply = await message.channel.send(`<@${message.author.id}> only whole numbers above 0 are allowed!`);
         await message.delete().catch(e => console.warn(e));
+        await sleep(3000);
         botReply.delete().catch(e => console.warn(e));
         return;
     };
@@ -59,6 +65,7 @@ module.exports = async (message) => {
     if (!Number.isInteger(numberInText)) {
         const botReply = await message.channel.send(`<@${message.author.id}> only whole numbers are allowed!`);
         await message.delete().catch(e => console.warn(e));
+        await sleep(3000);
         botReply.delete().catch(e => console.warn(e));
         return;
     };
