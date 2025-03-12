@@ -7,7 +7,7 @@ module.exports = {
         .setDescription('Sends the leaderboard of the best servers.'),
 
     run: async ({ interaction, client, handler }) => {
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply();
 
         const bestGuilds = await guilds.find({ 
             competetiveChannel: { $ne: '0', $exists: true } // Combined conditions
