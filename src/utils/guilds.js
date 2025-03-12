@@ -8,7 +8,7 @@ const guildSchema = new Schema({
     },
     countingChannel: {
         type: String,
-        required: true
+        default: '0'
     },
     incorrectNumber: {
         type: String,
@@ -37,7 +37,19 @@ const guildSchema = new Schema({
     lastSender: {
         type: String,
         default: '0'
-    }
+    },
+    competetiveChannel: {
+        type: String, 
+        default: '0'
+    },
+    nextCompetetiveNumber: {
+        type: Number,
+        default: 1
+    },
+    lastCompetetiveSender: {
+        type: String,
+        default: '0'
+    },
 });
 
 module.exports = mongoose.model('guilds', guildSchema);
