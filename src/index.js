@@ -38,3 +38,4 @@ new CommandKit({
 });
 
 client.login(process.env.TOKEN);
+//client.login(process.env.BETA_TOKEN);
