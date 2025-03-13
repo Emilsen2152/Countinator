@@ -27,6 +27,10 @@ module.exports = async (oldMessage, newMessage) => {
         return;
     };
 
+    if (oldMessage.content === newMessage.content) {
+        return;
+    };
+
     newMessage.channel.send(`<@${newMessage.author.id}> Edited their message!\nThe count has been restarted.\n**The next number is 1.**`).catch(console.warn);
 
     guild.nextCompetitiveNumber = 1;

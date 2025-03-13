@@ -15,6 +15,10 @@ module.exports = async (oldMessage) => {
         // Fetch audit logs to check if the message was deleted by a bot
         const auditLogs = await oldMessage.guild.fetchAuditLogs({ type: 72, limit: 1 });
         const entry = auditLogs.entries.first();
+
+        if (!oldMessage.content) {
+            return;
+        }
     
         if (entry.target.id === oldMessage.author.id) {
             return;
