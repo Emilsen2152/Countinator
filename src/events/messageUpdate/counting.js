@@ -27,7 +27,7 @@ module.exports = async (oldMessage, newMessage) => {
         return;
     };
 
-    newMessage.channel.send(`<@${newMessage.author.id}> Edited their message!\nThe count has been restarted.\n**The next number is 1.**`);
+    newMessage.channel.send(`<@${newMessage.author.id}> Edited their message!\nThe count has been restarted.\n**The next number is 1.**`).catch(console.warn);
 
     guild.nextNumber = 1;
     guild.lastSender = '0';
