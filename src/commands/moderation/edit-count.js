@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
 const guilds = require('../../utils/guilds.js');
 
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
         
     run: async ({ interaction, client }) => {
         await interaction.deferReply({
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         }).catch(console.warn);
         const guildId = interaction.guild.id;
         const guild = await guilds.findOne({
@@ -25,7 +25,7 @@ module.exports = {
         if (!guild) {
             return interaction.editReply({
                 content: 'This server has not been set up yet. Please run the `/setup` command first.',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
 
@@ -34,7 +34,7 @@ module.exports = {
         if (nextCount < 1) {
             return interaction.editReply({
                 content: 'The next number must be at least 1.',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         };
 
@@ -48,7 +48,7 @@ module.exports = {
         if (!countingChannel) {
             return interaction.editReply({
                 content: 'Counting channel not found. Please run the `/setup` command again.',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
 
@@ -58,7 +58,7 @@ module.exports = {
 
         interaction.editReply({
             content: 'Updated!',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         });
     },
     gaOnly: true,

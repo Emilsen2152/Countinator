@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, MessageFlags } = require('discord.js');
 const guilds = require('../../utils/guilds.js');
 const countingBlacklist = require('../../utils/countingBlacklist.js');
 const { options } = require('../management/setup.js');
@@ -29,13 +29,13 @@ module.exports = {
         if (!guild) {
             return interaction.reply({
                 content: 'This server has not been set up yet. Please run the `/setup` command first.',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         };
 
         if (subcommand === 'add') {
             await interaction.deferReply({
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
             
             const user = interaction.options.getUser('user');
@@ -65,7 +65,7 @@ module.exports = {
 
             interaction.editReply({
                 content: `User <@${user.id}> has been blacklisted for reason: ${reason}.`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
 
             const embed = new EmbedBuilder()
@@ -80,12 +80,12 @@ module.exports = {
                 console.warn(e);
                 interaction.followUp({
                     content: 'User has been blacklisted, but I was unable to send them a DM.',
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
             });
         } else if (subcommand === 'remove') {
             await interaction.deferReply({
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
             const user = interaction.options.getUser('user');
 
@@ -94,14 +94,14 @@ module.exports = {
             if (!blacklisted) {
                 interaction.editReply({
                     content: `User <@${user.id}> is not blacklisted.`,
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
                 return;
             };
 
             interaction.editReply({
                 content: `User <@${user.id}> has been removed from the blacklist.`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
 
             user.send(`You have been removed from the counting blacklist in ${interaction.guild.name}.`).catch(e => {

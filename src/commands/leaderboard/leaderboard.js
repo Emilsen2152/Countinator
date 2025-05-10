@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js'); 
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js'); 
 const guilds = require('../../utils/guilds.js');
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
         }).sort({ nextCompetitiveNumber: -1 }).limit(50).exec();
 
         if (!bestGuilds.length) {
-            return interaction.editReply({ content: 'No competitive servers found.', ephemeral: true });
+            return interaction.editReply({ content: 'No competitive servers found.', flags: MessageFlags.Ephemeral });
         }
 
         const leaderboard = await Promise.all(bestGuilds.map(async (guild, index) => {
