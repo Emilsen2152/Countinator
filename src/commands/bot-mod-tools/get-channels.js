@@ -15,7 +15,9 @@ module.exports = {
         ),            
 
     run: async ({ interaction, client }) => {
-        await interaction.deferReply().catch(console.warn);
+        await interaction.deferReply({
+            ephemeral: true,
+        }).catch(console.warn);
 
         interaction.editReply({
             content: 'Worked',
