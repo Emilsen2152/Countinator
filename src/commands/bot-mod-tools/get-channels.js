@@ -26,9 +26,10 @@ module.exports = {
     },
 
     options: {
+        guildOnly: true,
         devOnly: true,
         userPermissions: [],
-        botPermissions: ['AddReactions', 'ManageMessages', 'SendMessages', 'ViewChannel', 'ViewAuditLog'],
+        botPermissions: [],
         deleted: false,
     },
 };
