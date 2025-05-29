@@ -73,7 +73,6 @@ module.exports = {
     },
 
     options: {
-        guildOnly: true,
         devOnly: true,
         userPermissions: [],
         botPermissions: [],
