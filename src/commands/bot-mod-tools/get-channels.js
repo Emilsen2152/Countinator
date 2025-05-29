@@ -1,116 +1,161 @@
 const guilds = require('../../utils/guilds');
 const {
-    SlashCommandBuilder,
-    PermissionFlagsBits,
-    EmbedBuilder,
-    MessageFlags,
-    ChannelType,
+  SlashCommandBuilder,
+  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ComponentType,
+  MessageFlags,
+  ChannelType,
+  PermissionFlagsBits,
 } = require('discord.js');
 
 function getChannelTypeName(typeNumber) {
-    return Object.entries(ChannelType).find(([_, v]) => v === typeNumber)?.[0] || 'Unknown';
+  return Object.entries(ChannelType).find(([_, v]) => v === typeNumber)?.[0] || 'Unknown';
 }
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('get-channels')
-        .setDescription('Get the channels for a specific guild.')
-        .setContexts(['Guild'])
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-        .addStringOption((option) =>
-            option
-                .setName('guild-id')
-                .setDescription('The ID of the guild to get the channels for.')
-                .setRequired(true)
-        ),
+  data: new SlashCommandBuilder()
+    .setName('get-channels')
+    .setDescription('Get the channels for a specific guild.')
+    .addStringOption((option) =>
+      option
+        .setName('guild-id')
+        .setDescription('The ID of the guild to get the channels for.')
+        .setRequired(true)
+    )
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
-    run: async ({ interaction, client }) => {
-        await interaction.deferReply({
-            flags: MessageFlags.Ephemeral,
-        }).catch(console.warn);
+  run: async ({ interaction, client }) => {
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral }).catch(console.warn);
 
-        const guildId = interaction.options.getString('guild-id');
-        const guild = await guilds.findOne({ guildId }).exec();
+    const guildId = interaction.options.getString('guild-id');
+    const guildData = await guilds.findOne({ guildId }).exec();
 
-        if (!guild) {
-            return interaction.editReply({
-                content: 'This server has not been set up yet.',
-                flags: MessageFlags.Ephemeral,
-            });
-        }
+    if (!guildData) {
+      return interaction.editReply({
+        content: 'This server has not been set up yet.',
+        flags: MessageFlags.Ephemeral,
+      });
+    }
 
-        const targetGuild = client.guilds.cache.get(guildId);
-        if (!targetGuild) {
-            return interaction.editReply({
-                content: 'Guild not found. Please check the guild ID.',
-                flags: MessageFlags.Ephemeral,
-            });
-        }
+    const targetGuild = client.guilds.cache.get(guildId);
+    if (!targetGuild) {
+      return interaction.editReply({
+        content: 'Guild not found. Please check the guild ID.',
+        flags: MessageFlags.Ephemeral,
+      });
+    }
 
-        const channels = targetGuild.channels.cache.map(channel => ({
-            id: channel.id,
-            name: channel.name,
-            type: getChannelTypeName(channel.type),
-            topic: channel.topic || 'No topic',
-        }));
+    const channels = targetGuild.channels.cache
+      .filter(ch => ch.type !== ChannelType.GuildCategory)
+      .sort((a, b) => a.rawPosition - b.rawPosition)
+      .map(channel => ({
+        id: channel.id,
+        name: channel.name,
+        type: getChannelTypeName(channel.type),
+        topic: channel.topic || 'No topic',
+      }));
 
-        // Split channels into chunks of 25 per embed
-        const channelChunks = [];
-        for (let i = 0; i < channels.length; i += 25) {
-            channelChunks.push(channels.slice(i, i + 25));
-        }
+    if (channels.length === 0) {
+      return interaction.editReply({
+        content: 'No channels found in this guild.',
+        flags: MessageFlags.Ephemeral,
+      });
+    }
 
-        // Map each chunk to an embed
-        const allEmbeds = channelChunks.map((chunk, index) => {
-            const embed = new EmbedBuilder()
-                .setTitle(`Channels in ${targetGuild.name} (Page ${index + 1})`)
-                .setDescription('Here are the channels in the specified guild:')
-                .setColor('#0099ff')
-                .setTimestamp();
+    const pageSize = 25;
+    const totalPages = Math.ceil(channels.length / pageSize);
+    let currentPage = 0;
 
-            chunk.forEach(channel => {
-                embed.addFields({
-                    name: `${channel.name} (${channel.type})`,
-                    value: `ID: ${channel.id}\nTopic: ${channel.topic}`,
-                    inline: false,
-                });
-            });
+    const generateEmbed = (page) => {
+      const start = page * pageSize;
+      const end = Math.min(start + pageSize, channels.length);
+      const pageChannels = channels.slice(start, end);
 
-            embed.setFooter({
-                text: `Channels ${index * 25 + 1}–${index * 25 + chunk.length} of ${channels.length}`,
-            });
+      const embed = new EmbedBuilder()
+        .setTitle(`Channels in ${targetGuild.name} (Page ${page + 1}/${totalPages})`)
+        .setColor(0x0099ff)
+        .setDescription('Here are the channels in the specified guild:')
+        .setTimestamp()
+        .setFooter({ text: `Channels ${start + 1}–${end} of ${channels.length}` });
 
-            return embed;
+      pageChannels.forEach(channel => {
+        embed.addFields({
+          name: `${channel.name} (${channel.type})`,
+          value: `ID: \`${channel.id}\`\nTopic: ${channel.topic}`,
+          inline: false,
         });
+      });
 
-        // Split embeds into groups of 10 per message (Discord limit)
-        const embedGroups = [];
-        for (let i = 0; i < allEmbeds.length; i += 10) {
-            embedGroups.push(allEmbeds.slice(i, i + 10));
-        }
+      return embed;
+    };
 
-        // Edit the initial reply with the first group
-        await interaction.editReply({
-            content: `Showing ${channels.length} channels in ${targetGuild.name}:`,
-            embeds: embedGroups[0],
-            flags: MessageFlags.Ephemeral,
+    const generateButtons = (page) => {
+      return new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+          .setCustomId('prev')
+          .setLabel('← Previous')
+          .setStyle(ButtonStyle.Secondary)
+          .setDisabled(page === 0),
+        new ButtonBuilder()
+          .setCustomId('next')
+          .setLabel('Next →')
+          .setStyle(ButtonStyle.Secondary)
+          .setDisabled(page === totalPages - 1)
+      );
+    };
+
+    const initialEmbed = generateEmbed(currentPage);
+    const initialButtons = generateButtons(currentPage);
+
+    const reply = await interaction.editReply({
+      content: `Showing ${channels.length} channels in ${targetGuild.name}:`,
+      embeds: [initialEmbed],
+      components: [initialButtons],
+    });
+
+    const collector = reply.createMessageComponentCollector({
+      componentType: ComponentType.Button,
+      time: 1000 * 60 * 2, // 2 minutes
+    });
+
+    collector.on('collect', async (btnInt) => {
+      if (btnInt.user.id !== interaction.user.id) {
+        return btnInt.reply({
+          content: "This isn't your interaction!",
+          ephemeral: true,
         });
+      }
 
-        // Send remaining embed groups as follow-ups
-        for (let i = 1; i < embedGroups.length; i++) {
-            await interaction.followUp({
-                embeds: embedGroups[i],
-                flags: MessageFlags.Ephemeral,
-            }).catch(console.warn);
-        }
+      await btnInt.deferUpdate();
 
-        console.log(`Fetched ${channels.length} channels for guild: ${targetGuild.name} (${guildId})`);
-    },
+      if (btnInt.customId === 'next') currentPage++;
+      if (btnInt.customId === 'prev') currentPage--;
 
-    options: {
-        devOnly: true,
-        userPermissions: [],
-        botPermissions: [],
-        deleted: false,
-    },
+      const updatedEmbed = generateEmbed(currentPage);
+      const updatedButtons = generateButtons(currentPage);
+
+      await interaction.editReply({
+        embeds: [updatedEmbed],
+        components: [updatedButtons],
+      });
+    });
+
+    collector.on('end', async () => {
+      await interaction.editReply({
+        components: [],
+      });
+    });
+
+    console.log(`Fetched ${channels.length} channels for guild: ${targetGuild.name} (${guildId})`);
+  },
+
+  options: {
+    devOnly: true,
+    userPermissions: [],
+    botPermissions: [],
+    deleted: false,
+  },
 };
