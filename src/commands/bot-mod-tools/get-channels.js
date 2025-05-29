@@ -7,6 +7,10 @@ const {
     ChannelType,
 } = require('discord.js');
 
+function getChannelTypeName(typeNumber) {
+    return Object.entries(ChannelType).find(([_, v]) => v === typeNumber)?.[0] || 'Unknown';
+}
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('get-channels')
@@ -46,7 +50,7 @@ module.exports = {
         const channels = targetGuild.channels.cache.map(channel => ({
             id: channel.id,
             name: channel.name,
-            type: ChannelType[channel.type] || 'Unknown',
+            type: getChannelTypeName(channel.type),
             topic: channel.topic || 'No topic',
         }));
 
