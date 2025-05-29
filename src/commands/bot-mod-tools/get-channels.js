@@ -1,4 +1,3 @@
-const guilds = require('../../utils/guilds');
 const {
   SlashCommandBuilder,
   EmbedBuilder,
@@ -31,7 +30,6 @@ module.exports = {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral }).catch(console.warn);
 
     const guildId = interaction.options.getString('guild-id');
-    const guildData = await guilds.findOne({ guildId }).exec();
 
     if (!guildData) {
       return interaction.editReply({
