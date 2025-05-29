@@ -31,13 +31,6 @@ module.exports = {
 
     const guildId = interaction.options.getString('guild-id');
 
-    if (!guildData) {
-      return interaction.editReply({
-        content: 'This server has not been set up yet.',
-        flags: MessageFlags.Ephemeral,
-      });
-    }
-
     const targetGuild = client.guilds.cache.get(guildId);
     if (!targetGuild) {
       return interaction.editReply({
