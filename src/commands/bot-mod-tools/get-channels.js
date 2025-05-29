@@ -9,7 +9,7 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addStringOption((option) =>
         option
-            .setName('guildId')
+            .setName('guild-id')
             .setDescription('The ID of the guild to get the channels for.')
             .setRequired(true)
     ),            
