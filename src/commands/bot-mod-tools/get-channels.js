@@ -7,11 +7,11 @@ module.exports = {
     .setDescription('Get the channels for a specific guild.')
     .setContexts(['Guild'])
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-    .addStringOption((option =>
+    .addStringOption((option) =>
         option
             .setName('guildId')
             .setDescription('The ID of the guild to get the channels for.')
-            .setRequired(true))
+            .setRequired(true)
     ),            
 
     run: async ({ interaction, client }) => {
