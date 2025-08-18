@@ -96,7 +96,7 @@ module.exports = {
                     content: 'What should happen if the incorrect number is sent?',
                     components: [incorrectNumberRow],
                     withResponse: true
-                });
+                }).catch(console.warn);
 
                 const incorrectNumberResponse = await collectResponse();
 
@@ -110,7 +110,7 @@ module.exports = {
                     content: 'What should happen if someone counts twice?',
                     components: [wasLastSenderRow],
                     withResponse: true,
-                });
+                }).catch(console.warn);
 
                 const wasLastSenderResponse = await collectResponse();
 
@@ -124,7 +124,7 @@ module.exports = {
                     content: 'What should happen if the message sent is not a mathematical expression?',
                     components: [notMathRow],
                     withResponse: true,
-                });
+                }).catch(console.warn);
 
                 const notMathResponse = await collectResponse();
 
@@ -138,7 +138,7 @@ module.exports = {
                     content: 'What should happen if the message sent is not a whole number?',
                     components: [notWholeNumberRow],
                     withResponse: true,
-                });
+                }).catch(console.warn);
 
                 const notWholeNumberResponse = await collectResponse();
 
@@ -187,7 +187,7 @@ module.exports = {
                 content: 'By setting up the competitive counting channel you agree that the bot can show your server name in the global leaderboard.',
                 components: [termsRow],
                 withResponse: true
-            });
+            }).catch(console.warn);
 
             const termsResponse = await collectResponse();
 
