@@ -18,7 +18,8 @@ module.exports = {
                 .setName('guild-id')
                 .setDescription('The ID of the guild to get info for')
                 .setRequired(true)
-        ),
+        )
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
     run: async ({ interaction, client }) => {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral }).catch(console.warn);

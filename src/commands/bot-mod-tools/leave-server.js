@@ -17,7 +17,8 @@ module.exports = {
                 .setName('guild-id')
                 .setDescription('The ID of the guild to leave.')
                 .setRequired(true)
-        ),
+        )
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
     run: async ({ interaction, client }) => {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral }).catch(console.warn);
