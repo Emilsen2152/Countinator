@@ -1,6 +1,7 @@
 const {
     SlashCommandBuilder,
     MessageFlags,
+    PermissionFlagsBits
 } = require('discord.js');
 
 function formatFeatures(features) {
