@@ -6,7 +6,7 @@ const status = [
         type: ActivityType.Playing,
     },
     {
-        name: 'the couting channel',
+        name: 'the counting channel',
         type: ActivityType.Watching,
     }
 ];
